@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory &amp; Constructors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #020617;
+            color: #38bdf8;
+        }
+
+        /* BACKGROUND */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(56, 189, 248, 0.15), transparent 40%),
+                        radial-gradient(circle at 70% 60%, rgba(14, 165, 233, 0.15), transparent 40%);
+            z-index: -1;
+        }
+
+        /* HEADER DARK */
+        .header {
+            background: rgba(2, 6, 23, 0.95);
+        }
+
+        /* JUDUL BIRU */
+        .header h1 {
+            color: #38bdf8;
+            text-shadow: 0 0 5px #38bdf8, 0 0 15px #38bdf8, 0 0 25px #0ea5e9;
+        }
+
+        /* NAMA JADI BIRU & TERLIHAT */
+        .identitas p {
+            color: #38bdf8;
+            text-shadow: 0 0 6px #38bdf8;
+        }
+
+        /* SECTION */
+        .section {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #38bdf8;
+            border-radius: 12px;
+            background: rgba(2, 6, 23, 0.85);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            transition: 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px #38bdf8;
+        }
+
+        /* ===== WARNA GLOBAL (SEMUA BIRU) ===== */
+        body {
+            color: #38bdf8;
+        }
+
+        /* ===== JUDUL SOAL (IKUT BIRU) ===== */
+        .section h2 {
+            color: #38bdf8 !important;
+            text-shadow: 0 0 8px #38bdf8;
+            margin-bottom: 2px !important;
+            line-height: 1.2;
+        }
+
+        /* ===== NAMA DI BAWAH JUDUL ===== */
+        .nama {
+            color: #38bdf8;
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 6px #38bdf8;
+        }
+
+        /* ===== PENGERTIAN ===== */
+        .section p {
+            color: #38bdf8;
+            text-shadow: 0 0 6px #38bdf8;
+            margin-bottom: 5px;
+        }
+
+        /* ===== GARIS PEMBATAS ===== */
+        .section h2::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #38bdf8;
+            margin-top: 8px;
+            margin-bottom: 5px;
+        }
+
+        /* ===== IDENTITAS ATAS ===== */
+        .identitas p {
+            color: #38bdf8;
+            text-shadow: 0 0 6px #38bdf8;
+        }
+
+        /* CODE */
+        .code-box {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #38bdf8;
+            overflow: auto;
+            margin-top: 15px;
+        }
+
+        /* CODE COLOR */
+        .keyword { color: #60a5fa; }
+        .type { color: #38bdf8; }
+        .string { color: #facc15; }
+        .comment { color: #94a3b8; }
+
+        /* BUTTON */
+        .button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #38bdf8;
+            border: none;
+            cursor: pointer;
+            color: black;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* IMAGE */
+        img {
+            margin-top: 10px;
+            max-width: 100%;
+            height: auto;
+            display: none;
+            border-radius: 8px;
+        }
+
+        .section ul {
+            margin-top: 2px;
+        }
+
+        .section p {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header" style="padding: 30px; text-align:center;">
+        <h1 style="font-size: clamp(2.2em, 6vw, 2.8em); margin: 0; line-height: 1.3; font-weight: bold;">Factory</h1>
+        <h1 style="font-size: clamp(2.2em, 6vw, 2.8em); margin: 5px 0; line-height: 1.3; font-weight: bold;">&amp;</h1>
+        <h1 style="font-size: clamp(2.2em, 6vw, 2.8em); margin: 0; line-height: 1.3; font-weight: bold;">Constructors</h1>
+        <hr style="width: 60%; max-width: 300px; margin: 20px auto; border: none; height: 2px; background-color: #38bdf8;">
+        <div class="identitas">
+            <p>Yoza Ulpia Rafila</p>
+            <p>251410004</p>
+            <p>SI2A</p>
+        </div>
+    </div>
+
+    <!-- 1 -->
+    <div class="section">
+        <h2>1.Sintaks Factory Constructor</h2>
+        <ul>
+            <li>Pada program ini, <b>factory constructor</b> digunakan untuk membuat objek melalui method khusus yang mengembalikan instance dari class.</li>
+            <li>Class <b>MyClass</b> memiliki dua cara pembuatan objek, yaitu melalui generative constructor dan factory constructor.</li>
+            <li>Factory constructor <b>create()</b> bertugas membuat dan mengembalikan objek <b>MyClass</b>.</li>
+            <li>Penggunaan factory constructor memberikan fleksibilitas dalam proses pembuatan objek.</li>
+            <li>Pada fungsi <b>main()</b>, program membuat dua objek menggunakan constructor yang berbeda.</li>
+            <li>Program kemudian menampilkan pesan bahwa objek berhasil dibuat.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+class MyClass {
+
+  // Generative constructor
+  MyClass();
+
+  // Factory constructor
+  factory MyClass.create() {
+    return MyClass();
+  }
+}
+
+void main() {
+
+  var obj1 = MyClass();
+  var obj2 = MyClass.create();
+
+  print('Objek 1 berhasil dibuat');
+  print('Objek 2 berhasil dibuat');
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="section">
+        <h2>2.Kasus 1 – Singleton Pattern</h2>
+        <ul>
+            <li>Pada program ini, <b>singleton pattern</b> digunakan untuk memastikan bahwa hanya ada satu objek <b>DatabaseConnection</b> yang dibuat selama program berjalan.</li>
+            <li>Constructor <b>DatabaseConnection._internal()</b> dibuat private sehingga objek tidak dapat dibuat secara langsung dari luar class.</li>
+            <li>Variabel statis <b>_instance</b> digunakan untuk menyimpan satu-satunya instance dari class <b>DatabaseConnection</b>.</li>
+            <li>Factory constructor mengembalikan instance yang sama setiap kali objek diminta.</li>
+            <li>Pada fungsi <b>main()</b>, dua variabel dibuat menggunakan constructor yang sama, tetapi keduanya mengacu pada objek yang sama.</li>
+            <li>Program kemudian menampilkan hasil pengecekan objek dan proses koneksi ke database.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+class DatabaseConnection {
+
+  DatabaseConnection._internal() {
+    print('Creating database connection...');
+  }
+
+  static final DatabaseConnection _instance =
+      DatabaseConnection._internal();
+
+  factory DatabaseConnection() {
+    return _instance;
+  }
+
+  void connect() {
+    print('Connected to database');
+  }
+}
+
+void main() {
+
+  var db1 = DatabaseConnection();
+  var db2 = DatabaseConnection();
+
+  print(identical(db1, db2));
+
+  db1.connect();
+  db2.connect();
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="section">
+        <h2>3.Kasus 2 – Object Pool / Caching</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan untuk menerapkan konsep <b>Object Pool</b> atau <b>Caching</b>.</li>
+            <li>Setiap koneksi yang telah dibuat akan disimpan ke dalam variabel <b>_cache</b>.</li>
+            <li>Jika terdapat permintaan koneksi dengan host dan port yang sama, program akan mengembalikan objek yang sudah ada.</li>
+            <li>Jika koneksi belum tersedia pada cache, program akan membuat objek baru dan menyimpannya ke dalam cache.</li>
+            <li>Teknik ini dapat menghemat penggunaan memori dan meningkatkan efisiensi aplikasi.</li>
+            <li>Pada fungsi <b>main()</b>, program membuat beberapa koneksi dan membandingkan apakah objek yang digunakan sama atau berbeda.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+class ConnectionPool {
+  final String host;
+  final int port;
+
+  static final Map&lt;String, ConnectionPool&gt; _cache = {};
+
+  ConnectionPool._(this.host, this.port);
+
+  factory ConnectionPool(String host, int port) {
+    var key = '$host:$port';
+
+    if (_cache.containsKey(key)) {
+      print('Returning cached connection for $key');
+      return _cache[key]!;
+    }
+
+    print('Creating new connection for $key');
+    var connection = ConnectionPool._(host, port);
+    _cache[key] = connection;
+
+    return connection;
+  }
+
+  void query(String sql) {
+    print('Executing: $sql on $host:$port');
+  }
+}
+
+void main() {
+  var conn1 = ConnectionPool('localhost', 5432);
+  conn1.query('SELECT * FROM users');
+
+  print('');
+
+  var conn2 = ConnectionPool('localhost', 5432);
+  conn2.query('INSERT INTO products VALUES ("Laptop")');
+
+  print('');
+
+  var conn3 = ConnectionPool('db.example.com', 3306);
+  conn3.query('UPDATE orders SET status="Shipped"');
+
+  print('');
+  print('conn1 dan conn2 sama? ${identical(conn1, conn2)}');
+  print('conn1 dan conn3 sama? ${identical(conn1, conn3)}');
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="section">
+        <h2>4.Kasus 3 – Mengembalikan Subclass</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan untuk mengembalikan objek dari subclass yang berbeda.</li>
+            <li>Class <b>Shape</b> berperan sebagai class abstrak yang menjadi induk dari beberapa bentuk geometri.</li>
+            <li>Berdasarkan nilai parameter yang diberikan, factory constructor akan membuat objek <b>Circle</b>, <b>Square</b>, <b>Triangle</b>, atau <b>Rectangle</b>.</li>
+            <li>Teknik ini memungkinkan proses pembuatan objek dilakukan secara fleksibel tanpa perlu mengetahui class turunannya secara langsung.</li>
+            <li>Setiap subclass mengimplementasikan method <b>draw()</b> dengan perilaku yang berbeda.</li>
+            <li>Program kemudian menampilkan jenis objek yang sedang digambar sesuai subclass yang digunakan.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+abstract class Shape {
+  void draw();
+
+  factory Shape(String type) {
+    switch (type) {
+      case 'circle':
+        return Circle();
+      case 'square':
+        return Square();
+      case 'triangle':
+        return Triangle();
+      case 'rectangle':
+        return Rectangle();
+      default:
+        return Circle();
+    }
+  }
+}
+
+class Circle implements Shape {
+  @override
+  void draw() => print('Drawing circle');
+}
+
+class Square implements Shape {
+  @override
+  void draw() => print('Drawing square');
+}
+
+class Triangle implements Shape {
+  @override
+  void draw() => print('Drawing triangle');
+}
+
+class Rectangle implements Shape {
+  @override
+  void draw() => print('Drawing rectangle');
+}
+
+void main() {
+  var circle = Shape('circle');
+  var square = Shape('square');
+  var triangle = Shape('triangle');
+  var rectangle = Shape('rectangle');
+
+  circle.draw();
+  square.draw();
+  triangle.draw();
+  rectangle.draw();
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="section">
+        <h2>5.Praktik 1 – Factory untuk Configuration</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan untuk membuat objek konfigurasi berdasarkan environment yang dipilih.</li>
+            <li>Class <b>AppConfig</b> berfungsi untuk menyimpan konfigurasi aplikasi seperti environment, API URL, dan debug mode.</li>
+            <li>Berdasarkan parameter yang diberikan, factory constructor akan mengembalikan konfigurasi Development, Production, atau Staging.</li>
+            <li>Teknik ini memungkinkan pembuatan objek konfigurasi dilakukan secara terpusat tanpa perlu memanggil constructor tertentu secara langsung.</li>
+            <li>Setiap environment memiliki nilai konfigurasi yang berbeda sesuai kebutuhan pengembangan aplikasi.</li>
+            <li>Program kemudian menampilkan informasi konfigurasi yang digunakan berupa environment, API URL, dan debug mode.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+class AppConfig {
+  final String environment;
+  final String apiUrl;
+  final bool debugMode;
+
+  AppConfig._development()
+      : environment = 'development',
+        apiUrl = 'http://localhost:3000',
+        debugMode = true;
+
+  AppConfig._production()
+      : environment = 'production',
+        apiUrl = 'https://api.example.com',
+        debugMode = false;
+
+  AppConfig._staging()
+      : environment = 'staging',
+        apiUrl = 'https://staging.example.com',
+        debugMode = true;
+
+  factory AppConfig.fromEnvironment(String env) {
+    switch (env.toLowerCase()) {
+      case 'dev':
+        return AppConfig._development();
+      case 'prod':
+        return AppConfig._production();
+      case 'stage':
+        return AppConfig._staging();
+      default:
+        return AppConfig._development();
+    }
+  }
+
+  void printConfig() {
+    print('Environment : $environment');
+    print('API URL : $apiUrl');
+    print('Debug Mode : $debugMode');
+    print('------------------------');
+  }
+}
+
+void main() {
+  var dev = AppConfig.fromEnvironment('dev');
+  var prod = AppConfig.fromEnvironment('prod');
+  var stage = AppConfig.fromEnvironment('stage');
+
+  dev.printConfig();
+  prod.printConfig();
+  stage.printConfig();
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="section">
+        <h2>6.Factory dengan Named Constructors</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan untuk membuat objek User melalui beberapa cara yang berbeda.</li>
+            <li>Class User berfungsi untuk menyimpan data pengguna berupa ID, nama, dan email.</li>
+            <li>Factory constructor fromJson() digunakan untuk membuat objek User dari data JSON yang diterima.</li>
+            <li>Factory constructor guest() digunakan untuk membuat objek pengguna tamu dengan data default yang telah ditentukan.</li>
+            <li>Factory constructor create() digunakan untuk membuat objek pengguna baru berdasarkan data yang diberikan.</li>
+            <li>Program kemudian menampilkan informasi setiap objek User yang berhasil dibuat menggunakan factory constructor yang berbeda.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+class User {
+  final String id;
+  final String name;
+  final String email;
+
+  User._({
+    required this.id,
+    required this.name,
+    required this.email,
+  });
+
+  factory User.fromJson(Map json) {
+    return User._(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+    );
+  }
+
+  factory User.guest() {
+    return User._(
+      id: '0',
+      name: 'Guest',
+      email: 'guest@example.com',
+    );
+  }
+
+  factory User.create(String name, String email) {
+    return User._(
+      id: '001',
+      name: name,
+      email: email,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'User(id: $id, name: $name, email: $email)';
+  }
+}
+
+void main() {
+  var user = User.fromJson({
+    'id': '123',
+    'name': 'Alice',
+    'email': 'alice@example.com'
+  });
+
+  var guest = User.guest();
+  var newUser = User.create(
+    'Bob',
+    'bob@example.com',
+  );
+
+  print(user);
+  print(guest);
+  print(newUser);
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="section">
+        <h2>7.Factory dengan Generic</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan bersama Generic untuk membuat objek response dengan tipe data yang fleksibel.</li>
+            <li>Class Response berfungsi sebagai class dasar yang menyimpan data atau pesan error.</li>
+            <li>Factory constructor success() digunakan untuk membuat objek SuccessResponse yang berisi data berhasil.</li>
+            <li>Factory constructor error() digunakan untuk membuat objek ErrorResponse yang berisi pesan kesalahan.</li>
+            <li>Generic memungkinkan class Response digunakan untuk berbagai tipe data tanpa perlu membuat class baru.</li>
+            <li>Program kemudian menampilkan data yang berhasil dimuat dan pesan error sesuai objek yang dibuat.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+abstract class Response&lt;T&gt; {
+  final T? data;
+  final String? error;
+
+  Response({this.data, this.error});
+
+  // Factory untuk success
+  factory Response.success(T data) = SuccessResponse&lt;T&gt;;
+
+  // Factory untuk error
+  factory Response.error(String error) = ErrorResponse&lt;T&gt;;
+}
+
+class SuccessResponse&lt;T&gt; extends Response&lt;T&gt; {
+  SuccessResponse(T data) : super(data: data);
+}
+
+class ErrorResponse&lt;T&gt; extends Response&lt;T&gt; {
+  ErrorResponse(String error) : super(error: error);
+}
+
+void main() {
+  Response&lt;String&gt; success = Response.success('Data berhasil dimuat');
+  Response&lt;String&gt; error = Response.error('Gagal memuat data');
+
+  print('Success Data : ${success.data}');
+  print('Error Message : ${error.error}');
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="section">
+        <h2>8.Praktik 2 – Factory untuk Payment Methods</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan untuk membuat objek metode pembayaran berdasarkan jenis pembayaran yang dipilih.</li>
+            <li>Class PaymentMethod berperan sebagai class abstrak yang menjadi induk dari berbagai metode pembayaran.</li>
+            <li>Berdasarkan nilai parameter yang diberikan, factory constructor akan membuat objek CreditCardPayment, PayPalPayment, BankTransferPayment, atau EWalletPayment.</li>
+            <li>Teknik ini memungkinkan proses pembuatan objek dilakukan secara fleksibel tanpa perlu mengetahui class turunannya secara langsung.</li>
+            <li>Setiap subclass mengimplementasikan method pay() dengan cara pembayaran yang berbeda.</li>
+            <li>Program kemudian menampilkan informasi pembayaran sesuai metode pembayaran yang digunakan.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+abstract class PaymentMethod {
+  void pay(double amount);
+
+  factory PaymentMethod(String type) {
+    switch (type.toLowerCase()) {
+      case 'creditcard':
+        return CreditCardPayment();
+      case 'paypal':
+        return PayPalPayment();
+      case 'banktransfer':
+        return BankTransferPayment();
+      case 'ewallet':
+        return EWalletPayment();
+      default:
+        throw ArgumentError(
+          'Unknown payment method: $type');
+    }
+  }
+}
+
+class CreditCardPayment implements PaymentMethod {
+  @override
+  void pay(double amount) {
+    print('Paying $amount with Credit Card');
+  }
+}
+
+class PayPalPayment implements PaymentMethod {
+  @override
+  void pay(double amount) {
+    print('Paying $amount with PayPal');
+  }
+}
+
+class BankTransferPayment implements PaymentMethod {
+  @override
+  void pay(double amount) {
+    print('Paying $amount with Bank Transfer');
+  }
+}
+
+class EWalletPayment implements PaymentMethod {
+  @override
+  void pay(double amount) {
+    print('Paying $amount with E-Wallet');
+  }
+}
+
+void main() {
+  var creditCard = PaymentMethod('creditcard');
+  var paypal = PaymentMethod('paypal');
+  var bankTransfer = PaymentMethod('banktransfer');
+  var ewallet = PaymentMethod('ewallet');
+
+  creditCard.pay(100000);
+  paypal.pay(50000);
+  bankTransfer.pay(250000);
+  ewallet.pay(75000);
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="section">
+        <h2>9.Factory vs Static Method</h2>
+        <ul>
+            <li>Pada program ini ditunjukkan perbedaan antara Factory Constructor dan Static Method dalam membuat objek.</li>
+            <li>Class Example memiliki constructor privat yang hanya dapat diakses dari dalam class.</li>
+            <li>Factory constructor create() digunakan untuk membuat dan mengembalikan objek Example.</li>
+            <li>Static method createStatic() juga digunakan untuk membuat objek Example, tetapi merupakan metode statis biasa.</li>
+            <li>Factory constructor harus mengembalikan instance class atau subclass, sedangkan static method dapat mengembalikan tipe data apa saja.</li>
+            <li>Program kemudian membandingkan objek yang dibuat dan menampilkan hasilnya ke layar.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+class Example {
+  Example._();
+
+  // Factory Constructor
+  factory Example.create() => Example._();
+
+  // Static Method
+  static Example createStatic() => Example._();
+}
+
+void main() {
+  var e1 = Example.create();
+  var e2 = Example.createStatic();
+
+  print('e1 dibuat melalui konstruktor pabrik: $e1');
+  print('e2 dibuat melalui metode statis: $e2');
+
+  if (e1 != e2) {
+    print('e1 dan e2 adalah instansi yang berbeda, seperti yang diharapkan.');
+  }
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="section">
+        <h2>10.Factory untuk Immutable Objects dengan Cache</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan untuk membuat objek warna yang bersifat immutable dan disimpan dalam cache.</li>
+            <li>Class Color menyimpan nilai RGB yang tidak dapat diubah setelah objek dibuat.</li>
+            <li>Factory constructor rgb() akan memeriksa cache sebelum membuat objek baru.</li>
+            <li>Jika kombinasi warna yang sama sudah pernah dibuat, objek yang ada di cache akan digunakan kembali.</li>
+            <li>Teknik ini membantu menghemat penggunaan memori karena objek yang sama tidak dibuat berulang kali.</li>
+            <li>Program kemudian membuktikan bahwa dua objek dengan nilai RGB yang sama dapat merujuk pada instance yang sama.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+class Color {
+  final int red;
+  final int green;
+  final int blue;
+
+  static final Map&lt;String, Color&gt; _cache = {};
+
+  Color._(this.red, this.green, this.blue);
+
+  factory Color.rgb(int red, int green, int blue) {
+    if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) {
+      throw ArgumentError('RGB values must be 0-255');
+    }
+
+    var key = '$red,$green,$blue';
+
+    if (!_cache.containsKey(key)) {
+      _cache[key] = Color._(red, green, blue);
+    }
+
+    return _cache[key]!;
+  }
+
+  factory Color.red() => Color.rgb(255, 0, 0);
+  factory Color.green() => Color.rgb(0, 255, 0);
+  factory Color.blue() => Color.rgb(0, 0, 255);
+  factory Color.white() => Color.rgb(255, 255, 255);
+  factory Color.black() => Color.rgb(0, 0, 0);
+
+  @override
+  String toString() => 'Color($red, $green, $blue)';
+}
+
+void main() {
+  var red1 = Color.red();
+  var red2 = Color.rgb(255, 0, 0);
+
+  print(red1);
+  print(red2);
+  print(red1 == red2);
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="section">
+        <h2>11.Latihan – ConnectionFactory, NotificationFactory, dan ShapeFactory</h2>
+        <ul>
+            <li>Program ini menggabungkan tiga latihan yaitu ConnectionFactory, NotificationFactory, dan ShapeFactory.</li>
+            <li>ConnectionFactory digunakan untuk mengelola koneksi database menggunakan konsep connection pooling.</li>
+            <li>NotificationFactory digunakan untuk memilih subclass notifikasi berdasarkan platform yang digunakan seperti Android, iOS, dan Web.</li>
+            <li>ShapeFactory menggunakan mekanisme cache untuk menyimpan dan menggunakan kembali objek shape yang sama.</li>
+            <li>Factory constructor memungkinkan pembuatan objek dilakukan secara fleksibel tanpa perlu mengetahui class turunannya secara langsung.</li>
+            <li>Program menampilkan penggunaan koneksi database, pengiriman notifikasi, dan penggunaan cache pada objek shape.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+// ================================
+// ConnectionFactory
+// ================================
+
+class DatabaseConnection {
+  final int id;
+
+  DatabaseConnection(this.id);
+
+  void connect() {
+    print('Menggunakan koneksi database #$id');
+  }
+}
+
+class ConnectionFactory {
+  static final List&lt;DatabaseConnection&gt; _pool = [];
+
+  static DatabaseConnection getConnection() {
+    if (_pool.isNotEmpty) {
+      return _pool.removeLast();
+    }
+
+    return DatabaseConnection(
+      DateTime.now().millisecondsSinceEpoch,
+    );
+  }
+
+  static void releaseConnection(
+      DatabaseConnection connection) {
+    _pool.add(connection);
+  }
+}
+
+// ================================
+// NotificationFactory
+// ================================
+
+abstract class NotificationService {
+  void send();
+
+  factory NotificationService(String platform) {
+    switch (platform.toLowerCase()) {
+      case 'android':
+        return AndroidNotification();
+      case 'ios':
+        return IOSNotification();
+      case 'web':
+        return WebNotification();
+      default:
+        throw ArgumentError('Platform tidak dikenal');
+    }
+  }
+}
+
+class AndroidNotification implements NotificationService {
+  @override
+  void send() {
+    print('Mengirim notifikasi Android');
+  }
+}
+
+class IOSNotification implements NotificationService {
+  @override
+  void send() {
+    print('Mengirim notifikasi iOS');
+  }
+}
+
+class WebNotification implements NotificationService {
+  @override
+  void send() {
+    print('Mengirim notifikasi Web');
+  }
+}
+
+// ================================
+// ShapeFactory dengan Cache
+// ================================
+
+class Shape {
+  final String type;
+
+  Shape._(this.type);
+
+  static final Map&lt;String, Shape&gt; _cache = {};
+
+  factory Shape(String type) {
+    if (!_cache.containsKey(type)) {
+      _cache[type] = Shape._(type);
+    }
+
+    return _cache[type]!;
+  }
+
+  void draw() {
+    print('Drawing $type');
+  }
+}
+
+// ================================
+// Main Program
+// ================================
+
+void main() {
+  print('=== ConnectionFactory ===');
+
+  var conn1 = ConnectionFactory.getConnection();
+  conn1.connect();
+
+  ConnectionFactory.releaseConnection(conn1);
+
+  var conn2 = ConnectionFactory.getConnection();
+  conn2.connect();
+
+  print('\n=== NotificationFactory ===');
+
+  var android = NotificationService('android');
+  var ios = NotificationService('ios');
+  var web = NotificationService('web');
+
+  android.send();
+  ios.send();
+  web.send();
+
+  print('\n=== ShapeFactory ===');
+
+  var circle1 = Shape('circle');
+  var circle2 = Shape('circle');
+
+  circle1.draw();
+
+  print('Object sama: ${circle1 == circle2}');
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="section">
+        <h2>12.Challenge – AnimalFactory</h2>
+        <ul>
+            <li>Pada program ini, factory constructor digunakan untuk membuat berbagai jenis objek hewan berdasarkan input pengguna.</li>
+            <li>Class Animal berperan sebagai class abstrak yang menjadi induk dari beberapa jenis hewan.</li>
+            <li>Berdasarkan parameter yang diberikan, factory constructor akan membuat objek Cat, Dog, atau Bird.</li>
+            <li>Program menerapkan cache sehingga objek hewan dengan atribut yang sama dapat digunakan kembali tanpa membuat objek baru.</li>
+            <li>Validasi dilakukan untuk memastikan nama hewan tidak kosong dan jenis hewan yang dimasukkan valid.</li>
+            <li>Program kemudian menampilkan suara masing-masing hewan dan membuktikan bahwa cache bekerja dengan membandingkan dua objek yang sama.</li>
+        </ul>
+        <div class="code-box">
+            <pre><code>
+// ==========================================
+// Nama  : Yoza Ulpia Rafila
+// NIM   : 251410004
+// Kelas : SI2A
+// ==========================================
+
+abstract class Animal {
+  final String name;
+
+  Animal(this.name);
+
+  void sound();
+
+  static final Map&lt;String, Animal&gt; _cache = {};
+
+  factory Animal.create(
+    String type,
+    String name,
+  ) {
+    if (name.isEmpty) {
+      throw ArgumentError(
+          'Nama hewan tidak boleh kosong');
+    }
+
+    String key = '$type-$name';
+
+    if (_cache.containsKey(key)) {
+      return _cache[key]!;
+    }
+
+    Animal animal;
+
+    switch (type.toLowerCase()) {
+      case 'cat':
+        animal = Cat(name);
+        break;
+
+      case 'dog':
+        animal = Dog(name);
+        break;
+
+      case 'bird':
+        animal = Bird(name);
+        break;
+
+      default:
+        throw ArgumentError(
+            'Jenis hewan tidak dikenal');
+    }
+
+    _cache[key] = animal;
+
+    return animal;
+  }
+}
+
+class Cat extends Animal {
+  Cat(String name) : super(name);
+
+  @override
+  void sound() {
+    print('$name : Meow');
+  }
+}
+
+class Dog extends Animal {
+  Dog(String name) : super(name);
+
+  @override
+  void sound() {
+    print('$name : Woof');
+  }
+}
+
+class Bird extends Animal {
+  Bird(String name) : super(name);
+
+  @override
+  void sound() {
+    print('$name : Tweet');
+  }
+}
+
+void main() {
+  var cat1 = Animal.create(
+    'cat',
+    'Milo',
+  );
+
+  var dog1 = Animal.create(
+    'dog',
+    'Buddy',
+  );
+
+  var bird1 = Animal.create(
+    'bird',
+    'Rio',
+  );
+
+  var cat2 = Animal.create(
+    'cat',
+    'Milo',
+  );
+
+  cat1.sound();
+  dog1.sound();
+  bird1.sound();
+
+  print('Cache bekerja: ${cat1 == cat2}');
+}
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 13. Kesimpulan -->
+    <div class="section">
+        <h2>13. Kesimpulan</h2>
+        <p>Dari seluruh pembahasan mengenai Factory Constructor pada bahasa Dart, dapat disimpulkan bahwa:</p>
+        <ul>
+            <li>Factory constructor digunakan untuk mengontrol proses pembuatan objek sehingga lebih fleksibel dibandingkan constructor biasa.</li>
+            <li>Factory constructor dapat mengembalikan instance dari class yang sama maupun subclass sesuai kebutuhan program.</li>
+            <li>Factory constructor memungkinkan penerapan pola Factory Pattern untuk menyederhanakan proses pembuatan objek.</li>
+            <li>Factory constructor dapat digunakan untuk melakukan validasi data sebelum objek dibuat sehingga meningkatkan konsistensi program.</li>
+            <li>Factory constructor dapat memanfaatkan cache untuk menghemat memori dengan menggunakan kembali objek yang sudah ada.</li>
+            <li>Factory constructor dapat dikombinasikan dengan Generic, Named Constructor, dan berbagai konsep Object-Oriented Programming (OOP).</li>
+            <li>Seluruh konsep factory constructor membantu menghasilkan kode yang lebih efisien, terstruktur, mudah dipelihara, dan mudah dikembangkan.</li>
+        </ul>
+    </div>
+
+    <!-- 14. Penutup -->
+    <div class="section">
+        <h2>14. Penutup</h2>
+        <p>Demikian pembahasan mengenai Factory Constructor dalam bahasa Dart. Materi ini diharapkan dapat membantu dalam memahami cara pembuatan objek yang lebih fleksibel dan efisien sesuai kebutuhan aplikasi. Dengan memanfaatkan factory constructor, proses pengelolaan objek dapat menjadi lebih terstruktur, mudah dikembangkan, serta mendukung penerapan konsep Object-Oriented Programming (OOP) dengan lebih baik.</p>
+        <p>Penulis menyadari bahwa masih terdapat kekurangan dalam penyusunan tugas ini, sehingga kritik dan saran yang membangun sangat diharapkan demi perbaikan di masa mendatang. Semoga tugas ini bermanfaat dan dapat menjadi referensi dalam proses pembelajaran pemrograman Dart, khususnya mengenai Factory Constructor dan penerapannya dalam pengembangan perangkat lunak.</p>
+    </div>
+</div>
+</body>
+</html>
