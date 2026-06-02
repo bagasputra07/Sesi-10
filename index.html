@@ -1,11 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Cyber City :: Factory &amp; Constructors</title>
+    <title>⚡ Cyber Factory ⚡ – Factory Constructor & Pattern di Dart</title>
     <style>
+        /* ========== GLOBAL RESET & CYBERPUNK 2077 STYLE ========== */
         * {
             margin: 0;
             padding: 0;
@@ -14,14 +14,14 @@
 
         body {
             font-family: 'Share Tech Mono', 'Courier New', monospace;
-            background: #0a0f1e;
+            background: radial-gradient(circle at 20% 30%, #0a0f1f, #03050b);
             color: #0ff;
             line-height: 1.5;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* CYBER CITY GRID & NEON BACKGROUND */
+        /* ANIMATED CYBER GRID BACKGROUND */
         body::before {
             content: "";
             position: fixed;
@@ -30,13 +30,20 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(#0ff1 1px, transparent 1px),
-                linear-gradient(90deg, #0ff1 1px, transparent 1px);
+                linear-gradient(#0ff2 1px, transparent 1px),
+                linear-gradient(90deg, #0ff2 1px, transparent 1px);
             background-size: 40px 40px;
             pointer-events: none;
-            z-index: -2;
+            z-index: 0;
+            animation: gridScroll 20s linear infinite;
         }
 
+        @keyframes gridScroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        /* SCANLINES & CRT FLICKER */
         body::after {
             content: "";
             position: fixed;
@@ -44,28 +51,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 20% 40%, rgba(255, 0, 255, 0.15), transparent 60%),
-                        radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.2), transparent 70%);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 2px, transparent 2px, transparent 6px);
             pointer-events: none;
-            z-index: -1;
+            z-index: 1;
+            animation: flicker 0.15s infinite;
         }
 
-        /* SCANLINE EFFECT */
-        .scanline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 255, 255, 0.03) 0px,
-                rgba(0, 255, 255, 0.03) 2px,
-                transparent 2px,
-                transparent 6px
-            );
-            pointer-events: none;
-            z-index: 999;
+        @keyframes flicker {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         .container {
@@ -76,183 +70,234 @@
             z-index: 2;
         }
 
-        /* HEADER CYBER */
+        /* ========== HEADER ========== */
         .header {
             text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: rgba(10, 20, 30, 0.75);
+            backdrop-filter: blur(8px);
             border: 1px solid #0ff;
             border-radius: 30px;
-            background: rgba(0, 20, 40, 0.7);
-            backdrop-filter: blur(4px);
-            box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff3;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 0 20px #0ff5, inset 0 0 10px #0ff3;
+            margin-bottom: 30px;
         }
 
         .header h1 {
-            font-size: clamp(2rem, 8vw, 3.5rem);
-            font-weight: bold;
-            letter-spacing: 6px;
+            font-family: 'Orbitron', 'Share Tech Mono', monospace;
+            font-size: clamp(2.2rem, 8vw, 3.5rem);
+            font-weight: 900;
             text-transform: uppercase;
-            text-shadow: 0 0 8px #0ff, 0 0 18px #f0f, 0 0 30px #0ff;
-            animation: flicker 3s infinite;
+            letter-spacing: 5px;
+            text-shadow: 0 0 5px #0ff, 0 0 15px #0ff, 0 0 30px #0ff;
+            color: #0ff;
+            margin: 0;
+            line-height: 1.2;
         }
 
-        @keyframes flicker {
-            0% { text-shadow: 0 0 5px #0ff, 0 0 10px #f0f; }
-            50% { text-shadow: 0 0 15px #0ff, 0 0 25px #f0f, 0 0 35px #0ff; }
-            100% { text-shadow: 0 0 5px #0ff, 0 0 10px #f0f; }
-        }
-
-        .glow-bar {
-            width: 70%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #0ff, #f0f, #0ff, transparent);
+        hr {
+            width: 200px;
             margin: 20px auto;
+            border: none;
+            height: 3px;
+            background: #0ff;
+            box-shadow: 0 0 10px #0ff;
         }
 
         .identitas p {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            text-shadow: 0 0 6px #0ff;
-            background: #0a0f1ecc;
-            display: inline-block;
-            padding: 5px 20px;
-            border-radius: 40px;
-            margin: 5px;
+            color: #f0f;
+            text-shadow: 0 0 5px #f0f, 0 0 10px #f0f;
             letter-spacing: 1px;
         }
 
-        /* SECTION CYBER CARD */
+        /* ========== SECTION CARDS ========== */
         .section {
-            margin: 30px 0;
-            padding: 20px;
+            background: rgba(5, 10, 25, 0.85);
+            backdrop-filter: blur(5px);
             border: 1px solid #0ff;
             border-radius: 20px;
-            background: rgba(2, 10, 22, 0.85);
-            backdrop-filter: blur(2px);
-            transition: 0.2s ease-in-out;
-            box-shadow: 0 0 8px #0ff5;
+            margin: 30px 0;
+            padding: 25px;
+            transition: 0.3s ease;
+            box-shadow: 0 0 15px #0ff3;
         }
 
         .section:hover {
-            transform: translateY(-3px);
+            transform: translateY(-8px);
             border-color: #f0f;
-            box-shadow: 0 0 25px #f0f, 0 0 10px #0ff;
+            box-shadow: 0 0 30px #0ff8, 0 0 15px #f0f8;
         }
 
         .section h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.9rem;
+            color: #f0f;
+            text-shadow: 0 0 5px #f0f;
+            border-left: 6px solid #0ff;
+            padding-left: 18px;
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.4rem;
             color: #0ff;
-            text-shadow: 0 0 8px #0ff;
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            border-left: 4px solid #f0f;
-            padding-left: 15px;
+            margin: 20px 0 10px 0;
+            text-shadow: 0 0 2px #0ff;
         }
 
-        .section h2::after {
-            content: "";
-            display: block;
-            width: 80px;
-            height: 2px;
-            background: linear-gradient(90deg, #f0f, #0ff);
-            margin-top: 6px;
-        }
-
-        .section p, .section li {
+        .section ul, .section p {
+            margin: 15px 0;
+            padding-left: 20px;
             color: #b0f0ff;
-            text-shadow: 0 0 3px #0ff8;
-        }
-
-        .code-box {
-            background: #010714;
-            border: 1px solid #0ff;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 20px;
-            overflow-x: auto;
-            font-family: 'Fira Code', 'Courier New', monospace;
-            font-size: 0.85rem;
-            box-shadow: inset 0 0 15px #0ff1, 0 5px 12px rgba(0,0,0,0.5);
-        }
-
-        pre {
-            margin: 0;
-            color: #bbffff;
-        }
-
-        .keyword { color: #ff66cc; font-weight: bold; }
-        .type { color: #0ff; }
-        .string { color: #ffcc44; }
-        .comment { color: #44ffaa; font-style: italic; }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #021022;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #0ff;
-            border-radius: 10px;
-        }
-
-        ul, ol {
-            padding-left: 25px;
-            margin: 10px 0;
         }
 
         li {
             margin: 8px 0;
         }
-        hr {
-            border-color: #0ff;
+
+        /* ===== CODE BOX FUTURISTIC ===== */
+        .code-box {
+            background: #010a14;
+            border: 1px solid #0ff;
+            border-radius: 15px;
+            padding: 18px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            box-shadow: inset 0 0 10px #0ff2, 0 5px 15px rgba(0,0,0,0.5);
+            font-family: 'Fira Code', 'Courier New', monospace;
         }
-        @media (max-width: 700px) {
+
+        .keyword { color: #ff66cc; font-weight: bold; }
+        .type { color: #0ff; }
+        .string { color: #ffcc00; }
+        .comment { color: #88aaff; font-style: italic; }
+
+        /* ===== BUTTONS ===== */
+        .button {
+            background: linear-gradient(135deg, #0a1a2a, #0f0f2f);
+            border: 2px solid #0ff;
+            color: #0ff;
+            padding: 10px 24px;
+            margin: 20px 0 5px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: 0.2s;
+            box-shadow: 0 0 8px #0ff;
+        }
+
+        .button:hover {
+            background: #0ff;
+            color: #000;
+            border-color: #f0f;
+            box-shadow: 0 0 20px #0ff, 0 0 10px #f0f;
+            transform: scale(1.02);
+        }
+
+        iframe {
+            border: 2px solid #f0f;
+            border-radius: 12px;
+            background: #000;
+            box-shadow: 0 0 15px #f0f;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+            font-size: 0.9rem;
+            border-top: 1px solid #0ff;
+            color: #0ff;
+            text-shadow: 0 0 4px #0ff;
+            letter-spacing: 1px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 780px) {
             .container { padding: 12px; }
-            .section h2 { font-size: 1.4rem; }
+            .section h2 { font-size: 1.5rem; }
+            .code-box { font-size: 0.75rem; }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #010101;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0ff;
+            border-radius: 10px;
         }
     </style>
+    <script>
+        let activeElement = null;
+
+        function showContent(id) {
+            if (activeElement) {
+                activeElement.style.display = "none";
+            }
+            const el = document.getElementById(id);
+            if (activeElement === el) {
+                activeElement = null;
+                return;
+            }
+            el.style.display = "block";
+            activeElement = el;
+        }
+
+        function runDart(id, url) {
+            if (activeElement) {
+                activeElement.style.display = "none";
+            }
+            const frame = document.getElementById(id);
+            if (activeElement === frame) {
+                activeElement = null;
+                return;
+            }
+            frame.src = url;
+            frame.style.display = "block";
+            activeElement = frame;
+        }
+    </script>
 </head>
 <body>
-<div class="scanline"></div>
+
 <div class="container">
     <div class="header">
-        <h1>Factory</h1>
-        <h1 style="margin-top: -10px;">&amp;</h1>
-        <h1>Constructors</h1>
-        <div class="glow-bar"></div>
+        <h1>🏭 FACTORY</h1>
+        <h1>⚡ CONSTRUCTORS ⚡</h1>
+        <hr>
         <div class="identitas">
-            <p>⚡ Muhammad Bagas putra andeza ⚡</p>
-            <p>🔢 251410003</p>
-            <p>💾 SI2A</p>
+            <p>// Nama: Muhammad Bagas putra andeza</p>
+            <p>// Nim: 251410003</p>
+            <p>// Kelas: SI.2A</p>
         </div>
-        <div class="glow-bar" style="width: 40%; margin-top: 20px;"></div>
     </div>
 
-    <!-- ==================== 1 ==================== -->
+    <!-- SECTION 1 -->
     <div class="section">
         <h2>1. Sintaks Factory Constructor</h2>
         <ul>
-            <li>Pada program ini, <b>factory constructor</b> digunakan untuk membuat objek melalui method khusus yang mengembalikan instance dari class.</li>
-            <li>Class <b>MyClass</b> memiliki dua cara pembuatan objek, yaitu melalui generative constructor dan factory constructor.</li>
-            <li>Factory constructor <b>create()</b> bertugas membuat dan mengembalikan objek <b>MyClass</b>.</li>
+            <li>Pada program ini, factory constructor digunakan untuk membuat objek melalui method khusus yang mengembalikan instance dari class.</li>
+            <li>Class MyClass memiliki dua cara pembuatan objek, yaitu melalui generative constructor dan factory constructor.</li>
+            <li>Factory constructor create() bertugas membuat dan mengembalikan objek MyClass.</li>
             <li>Penggunaan factory constructor memberikan fleksibilitas dalam proses pembuatan objek.</li>
-            <li>Pada fungsi <b>main()</b>, program membuat dua objek menggunakan constructor yang berbeda.</li>
+            <li>Pada fungsi main(), program membuat dua objek menggunakan constructor yang berbeda.</li>
             <li>Program kemudian menampilkan pesan bahwa objek berhasil dibuat.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 class MyClass {
-
   // Generative constructor
   MyClass();
 
@@ -263,7 +308,6 @@ class MyClass {
 }
 
 void main() {
-
   var obj1 = MyClass();
   var obj2 = MyClass.create();
 
@@ -272,35 +316,36 @@ void main() {
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart1','https://dartpad.dev/embed-inline.html?id=8ab9c3f8d7b2b4c7e5f1a6d9c2b3e4f5&split=60&run=true')">🚀 Tampilkan DartPad 1 🚀</button>
+        <iframe id="dart1" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 2 -->
+    <!-- SECTION 2 -->
     <div class="section">
         <h2>2. Kasus 1 – Singleton Pattern</h2>
         <ul>
-            <li>Pada program ini, <b>singleton pattern</b> digunakan untuk memastikan bahwa hanya ada satu objek <b>DatabaseConnection</b> yang dibuat selama program berjalan.</li>
-            <li>Constructor <b>DatabaseConnection._internal()</b> dibuat private sehingga objek tidak dapat dibuat secara langsung dari luar class.</li>
-            <li>Variabel statis <b>_instance</b> digunakan untuk menyimpan satu-satunya instance dari class <b>DatabaseConnection</b>.</li>
+            <li>Pada program ini, singleton pattern digunakan untuk memastikan bahwa hanya ada satu objek DatabaseConnection yang dibuat selama program berjalan.</li>
+            <li>Constructor DatabaseConnection._internal() dibuat private sehingga objek tidak dapat dibuat secara langsung dari luar class.</li>
+            <li>Variabel statis _instance digunakan untuk menyimpan satu-satunya instance dari class DatabaseConnection.</li>
             <li>Factory constructor mengembalikan instance yang sama setiap kali objek diminta.</li>
-            <li>Pada fungsi <b>main()</b>, dua variabel dibuat menggunakan constructor yang sama, tetapi keduanya mengacu pada objek yang sama.</li>
+            <li>Pada fungsi main(), dua variabel dibuat menggunakan constructor yang sama, tetapi keduanya mengacu pada objek yang sama.</li>
             <li>Program kemudian menampilkan hasil pengecekan objek dan proses koneksi ke database.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 class DatabaseConnection {
-
   DatabaseConnection._internal() {
     print('Creating database connection...');
   }
 
-  static final DatabaseConnection _instance =
-      DatabaseConnection._internal();
+  static final DatabaseConnection _instance = DatabaseConnection._internal();
 
   factory DatabaseConnection() {
     return _instance;
@@ -312,58 +357,55 @@ class DatabaseConnection {
 }
 
 void main() {
-
   var db1 = DatabaseConnection();
   var db2 = DatabaseConnection();
 
   print(identical(db1, db2));
-
   db1.connect();
   db2.connect();
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart2','https://dartpad.dev/embed-inline.html?id=7a9c3f8d7b2b4c7e5f1a6d9c2b3e4f6&split=60&run=true')">🚀 Tampilkan DartPad 2 🚀</button>
+        <iframe id="dart2" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 3 -->
+    <!-- SECTION 3 -->
     <div class="section">
         <h2>3. Kasus 2 – Object Pool / Caching</h2>
         <ul>
-            <li>Pada program ini, factory constructor digunakan untuk menerapkan konsep <b>Object Pool</b> atau <b>Caching</b>.</li>
-            <li>Setiap koneksi yang telah dibuat akan disimpan ke dalam variabel <b>_cache</b>.</li>
+            <li>Pada program ini, factory constructor digunakan untuk menerapkan konsep Object Pool atau Caching.</li>
+            <li>Setiap koneksi yang telah dibuat akan disimpan ke dalam variabel _cache.</li>
             <li>Jika terdapat permintaan koneksi dengan host dan port yang sama, program akan mengembalikan objek yang sudah ada.</li>
             <li>Jika koneksi belum tersedia pada cache, program akan membuat objek baru dan menyimpannya ke dalam cache.</li>
             <li>Teknik ini dapat menghemat penggunaan memori dan meningkatkan efisiensi aplikasi.</li>
-            <li>Pada fungsi <b>main()</b>, program membuat beberapa koneksi dan membandingkan apakah objek yang digunakan sama atau berbeda.</li>
+            <li>Pada fungsi main(), program membuat beberapa koneksi dan membandingkan apakah objek yang digunakan sama atau berbeda.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 class ConnectionPool {
   final String host;
   final int port;
-
-  static final Map&lt;String, ConnectionPool&gt; _cache = {};
+  static final Map<String, ConnectionPool> _cache = {};
 
   ConnectionPool._(this.host, this.port);
 
   factory ConnectionPool(String host, int port) {
     var key = '$host:$port';
-
     if (_cache.containsKey(key)) {
       print('Returning cached connection for $key');
       return _cache[key]!;
     }
-
     print('Creating new connection for $key');
     var connection = ConnectionPool._(host, port);
     _cache[key] = connection;
-
     return connection;
   }
 
@@ -375,47 +417,44 @@ class ConnectionPool {
 void main() {
   var conn1 = ConnectionPool('localhost', 5432);
   conn1.query('SELECT * FROM users');
-
   print('');
-
   var conn2 = ConnectionPool('localhost', 5432);
   conn2.query('INSERT INTO products VALUES ("Laptop")');
-
   print('');
-
   var conn3 = ConnectionPool('db.example.com', 3306);
   conn3.query('UPDATE orders SET status="Shipped"');
-
   print('');
   print('conn1 dan conn2 sama? ${identical(conn1, conn2)}');
   print('conn1 dan conn3 sama? ${identical(conn1, conn3)}');
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart3','https://dartpad.dev/embed-inline.html?id=6a9c3f8d7b2b4c7e5f1a6d9c2b3e4f7&split=60&run=true')">🚀 Tampilkan DartPad 3 🚀</button>
+        <iframe id="dart3" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 4 -->
+    <!-- SECTION 4 -->
     <div class="section">
         <h2>4. Kasus 3 – Mengembalikan Subclass</h2>
         <ul>
             <li>Pada program ini, factory constructor digunakan untuk mengembalikan objek dari subclass yang berbeda.</li>
-            <li>Class <b>Shape</b> berperan sebagai class abstrak yang menjadi induk dari beberapa bentuk geometri.</li>
-            <li>Berdasarkan nilai parameter yang diberikan, factory constructor akan membuat objek <b>Circle</b>, <b>Square</b>, <b>Triangle</b>, atau <b>Rectangle</b>.</li>
+            <li>Class Shape berperan sebagai class abstrak yang menjadi induk dari beberapa bentuk geometri.</li>
+            <li>Berdasarkan nilai parameter yang diberikan, factory constructor akan membuat objek Circle, Square, Triangle, atau Rectangle.</li>
             <li>Teknik ini memungkinkan proses pembuatan objek dilakukan secara fleksibel tanpa perlu mengetahui class turunannya secara langsung.</li>
-            <li>Setiap subclass mengimplementasikan method <b>draw()</b> dengan perilaku yang berbeda.</li>
+            <li>Setiap subclass mengimplementasikan method draw() dengan perilaku yang berbeda.</li>
             <li>Program kemudian menampilkan jenis objek yang sedang digambar sesuai subclass yang digunakan.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 abstract class Shape {
   void draw();
-
   factory Shape(String type) {
     switch (type) {
       case 'circle':
@@ -465,26 +504,29 @@ void main() {
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart4','https://dartpad.dev/embed-inline.html?id=5a9c3f8d7b2b4c7e5f1a6d9c2b3e4f8&split=60&run=true')">🚀 Tampilkan DartPad 4 🚀</button>
+        <iframe id="dart4" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 5 -->
+    <!-- SECTION 5 -->
     <div class="section">
         <h2>5. Praktik 1 – Factory untuk Configuration</h2>
         <ul>
             <li>Pada program ini, factory constructor digunakan untuk membuat objek konfigurasi berdasarkan environment yang dipilih.</li>
-            <li>Class <b>AppConfig</b> berfungsi untuk menyimpan konfigurasi aplikasi seperti environment, API URL, dan debug mode.</li>
+            <li>Class AppConfig berfungsi untuk menyimpan konfigurasi aplikasi seperti environment, API URL, dan debug mode.</li>
             <li>Berdasarkan parameter yang diberikan, factory constructor akan mengembalikan konfigurasi Development, Production, atau Staging.</li>
             <li>Teknik ini memungkinkan pembuatan objek konfigurasi dilakukan secara terpusat tanpa perlu memanggil constructor tertentu secara langsung.</li>
             <li>Setiap environment memiliki nilai konfigurasi yang berbeda sesuai kebutuhan pengembangan aplikasi.</li>
             <li>Program kemudian menampilkan informasi konfigurasi yang digunakan berupa environment, API URL, dan debug mode.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 class AppConfig {
   final String environment;
@@ -538,9 +580,11 @@ void main() {
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart5','https://dartpad.dev/embed-inline.html?id=4a9c3f8d7b2b4c7e5f1a6d9c2b3e4f9&split=60&run=true')">🚀 Tampilkan DartPad 5 🚀</button>
+        <iframe id="dart5" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 6 -->
+    <!-- SECTION 6 -->
     <div class="section">
         <h2>6. Factory dengan Named Constructors</h2>
         <ul>
@@ -551,13 +595,14 @@ void main() {
             <li>Factory constructor create() digunakan untuk membuat objek pengguna baru berdasarkan data yang diberikan.</li>
             <li>Program kemudian menampilkan informasi setiap objek User yang berhasil dibuat menggunakan factory constructor yang berbeda.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 class User {
   final String id;
@@ -570,7 +615,7 @@ class User {
     required this.email,
   });
 
-  factory User.fromJson(Map json) {
+  factory User.fromJson(Map<String, dynamic> json) {
     return User._(
       id: json['id'],
       name: json['name'],
@@ -606,12 +651,8 @@ void main() {
     'name': 'Alice',
     'email': 'alice@example.com'
   });
-
   var guest = User.guest();
-  var newUser = User.create(
-    'Bob',
-    'bob@example.com',
-  );
+  var newUser = User.create('Bob', 'bob@example.com');
 
   print(user);
   print(guest);
@@ -619,9 +660,11 @@ void main() {
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart6','https://dartpad.dev/embed-inline.html?id=3a9c3f8d7b2b4c7e5f1a6d9c2b3e5f0&split=60&run=true')">🚀 Tampilkan DartPad 6 🚀</button>
+        <iframe id="dart6" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 7 -->
+    <!-- SECTION 7 -->
     <div class="section">
         <h2>7. Factory dengan Generic</h2>
         <ul>
@@ -632,47 +675,50 @@ void main() {
             <li>Generic memungkinkan class Response digunakan untuk berbagai tipe data tanpa perlu membuat class baru.</li>
             <li>Program kemudian menampilkan data yang berhasil dimuat dan pesan error sesuai objek yang dibuat.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
-abstract class Response&lt;T&gt; {
+abstract class Response<T> {
   final T? data;
   final String? error;
 
   Response({this.data, this.error});
 
   // Factory untuk success
-  factory Response.success(T data) = SuccessResponse&lt;T&gt;;
+  factory Response.success(T data) = SuccessResponse<T>;
 
   // Factory untuk error
-  factory Response.error(String error) = ErrorResponse&lt;T&gt;;
+  factory Response.error(String error) = ErrorResponse<T>;
 }
 
-class SuccessResponse&lt;T&gt; extends Response&lt;T&gt; {
+class SuccessResponse<T> extends Response<T> {
   SuccessResponse(T data) : super(data: data);
 }
 
-class ErrorResponse&lt;T&gt; extends Response&lt;T&gt; {
+class ErrorResponse<T> extends Response<T> {
   ErrorResponse(String error) : super(error: error);
 }
 
 void main() {
-  Response&lt;String&gt; success = Response.success('Data berhasil dimuat');
-  Response&lt;String&gt; error = Response.error('Gagal memuat data');
+  Response<String> success = Response.success('Data berhasil dimuat');
+  Response<String> error = Response.error('Gagal memuat data');
 
   print('Success Data : ${success.data}');
   print('Error Message : ${error.error}');
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart7','https://dartpad.dev/embed-inline.html?id=2a9c3f8d7b2b4c7e5f1a6d9c2b3e5f1&split=60&run=true')">🚀 Tampilkan DartPad 7 🚀</button>
+        <iframe id="dart7" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 8 -->
+    <!-- SECTION 8 -->
     <div class="section">
         <h2>8. Praktik 2 – Factory untuk Payment Methods</h2>
         <ul>
@@ -683,17 +729,17 @@ void main() {
             <li>Setiap subclass mengimplementasikan method pay() dengan cara pembayaran yang berbeda.</li>
             <li>Program kemudian menampilkan informasi pembayaran sesuai metode pembayaran yang digunakan.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 abstract class PaymentMethod {
   void pay(double amount);
-
   factory PaymentMethod(String type) {
     switch (type.toLowerCase()) {
       case 'creditcard':
@@ -705,8 +751,7 @@ abstract class PaymentMethod {
       case 'ewallet':
         return EWalletPayment();
       default:
-        throw ArgumentError(
-          'Unknown payment method: $type');
+        throw ArgumentError('Unknown payment method: $type');
     }
   }
 }
@@ -752,9 +797,11 @@ void main() {
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart8','https://dartpad.dev/embed-inline.html?id=1a9c3f8d7b2b4c7e5f1a6d9c2b3e5f2&split=60&run=true')">🚀 Tampilkan DartPad 8 🚀</button>
+        <iframe id="dart8" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 9 -->
+    <!-- SECTION 9 -->
     <div class="section">
         <h2>9. Factory vs Static Method</h2>
         <ul>
@@ -765,13 +812,14 @@ void main() {
             <li>Factory constructor harus mengembalikan instance class atau subclass, sedangkan static method dapat mengembalikan tipe data apa saja.</li>
             <li>Program kemudian membandingkan objek yang dibuat dan menampilkan hasilnya ke layar.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 class Example {
   Example._();
@@ -796,9 +844,11 @@ void main() {
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart9','https://dartpad.dev/embed-inline.html?id=0a9c3f8d7b2b4c7e5f1a6d9c2b3e5f3&split=60&run=true')">🚀 Tampilkan DartPad 9 🚀</button>
+        <iframe id="dart9" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 10 -->
+    <!-- SECTION 10 -->
     <div class="section">
         <h2>10. Factory untuk Immutable Objects dengan Cache</h2>
         <ul>
@@ -809,20 +859,21 @@ void main() {
             <li>Teknik ini membantu menghemat penggunaan memori karena objek yang sama tidak dibuat berulang kali.</li>
             <li>Program kemudian membuktikan bahwa dua objek dengan nilai RGB yang sama dapat merujuk pada instance yang sama.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
-// ==========================================
+// ======================================
 // Nama  : Muhammad Bagas putra andeza
 // NIM   : 251410003
-// Kelas : SI2A
-// ==========================================
+// Kelas : SI.2A
+// ======================================
 
 class Color {
   final int red;
   final int green;
   final int blue;
 
-  static final Map&lt;String, Color&gt; _cache = {};
+  static final Map<String, Color> _cache = {};
 
   Color._(this.red, this.green, this.blue);
 
@@ -830,13 +881,10 @@ class Color {
     if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) {
       throw ArgumentError('RGB values must be 0-255');
     }
-
     var key = '$red,$green,$blue';
-
     if (!_cache.containsKey(key)) {
       _cache[key] = Color._(red, green, blue);
     }
-
     return _cache[key]!;
   }
 
@@ -860,9 +908,11 @@ void main() {
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart10','https://dartpad.dev/embed-inline.html?id=9a9c3f8d7b2b4c7e5f1a6d9c2b3e5f4&split=60&run=true')">🚀 Tampilkan DartPad 10 🚀</button>
+        <iframe id="dart10" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 11 -->
+    <!-- SECTION 11 -->
     <div class="section">
         <h2>11. Latihan – ConnectionFactory, NotificationFactory, dan ShapeFactory</h2>
         <ul>
@@ -873,6 +923,7 @@ void main() {
             <li>Factory constructor memungkinkan pembuatan objek dilakukan secara fleksibel tanpa perlu mengetahui class turunannya secara langsung.</li>
             <li>Program menampilkan penggunaan koneksi database, pengiriman notifikasi, dan penggunaan cache pada objek shape.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
 // ==========================================
@@ -884,32 +935,23 @@ void main() {
 // ================================
 // ConnectionFactory
 // ================================
-
 class DatabaseConnection {
   final int id;
-
   DatabaseConnection(this.id);
-
   void connect() {
     print('Menggunakan koneksi database #$id');
   }
 }
 
 class ConnectionFactory {
-  static final List&lt;DatabaseConnection&gt; _pool = [];
-
+  static final List<DatabaseConnection> _pool = [];
   static DatabaseConnection getConnection() {
     if (_pool.isNotEmpty) {
       return _pool.removeLast();
     }
-
-    return DatabaseConnection(
-      DateTime.now().millisecondsSinceEpoch,
-    );
+    return DatabaseConnection(DateTime.now().millisecondsSinceEpoch);
   }
-
-  static void releaseConnection(
-      DatabaseConnection connection) {
+  static void releaseConnection(DatabaseConnection connection) {
     _pool.add(connection);
   }
 }
@@ -917,10 +959,8 @@ class ConnectionFactory {
 // ================================
 // NotificationFactory
 // ================================
-
 abstract class NotificationService {
   void send();
-
   factory NotificationService(String platform) {
     switch (platform.toLowerCase()) {
       case 'android':
@@ -959,22 +999,16 @@ class WebNotification implements NotificationService {
 // ================================
 // ShapeFactory dengan Cache
 // ================================
-
 class Shape {
   final String type;
-
   Shape._(this.type);
-
-  static final Map&lt;String, Shape&gt; _cache = {};
-
+  static final Map<String, Shape> _cache = {};
   factory Shape(String type) {
     if (!_cache.containsKey(type)) {
       _cache[type] = Shape._(type);
     }
-
     return _cache[type]!;
   }
-
   void draw() {
     print('Drawing $type');
   }
@@ -983,42 +1017,35 @@ class Shape {
 // ================================
 // Main Program
 // ================================
-
 void main() {
   print('=== ConnectionFactory ===');
-
   var conn1 = ConnectionFactory.getConnection();
   conn1.connect();
-
   ConnectionFactory.releaseConnection(conn1);
-
   var conn2 = ConnectionFactory.getConnection();
   conn2.connect();
 
   print('\n=== NotificationFactory ===');
-
   var android = NotificationService('android');
   var ios = NotificationService('ios');
   var web = NotificationService('web');
-
   android.send();
   ios.send();
   web.send();
 
   print('\n=== ShapeFactory ===');
-
   var circle1 = Shape('circle');
   var circle2 = Shape('circle');
-
   circle1.draw();
-
   print('Object sama: ${circle1 == circle2}');
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart11','https://dartpad.dev/embed-inline.html?id=8a9c3f8d7b2b4c7e5f1a6d9c2b3e5f5&split=60&run=true')">🚀 Tampilkan DartPad 11 🚀</button>
+        <iframe id="dart11" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 12 -->
+    <!-- SECTION 12 -->
     <div class="section">
         <h2>12. Challenge – AnimalFactory</h2>
         <ul>
@@ -1029,6 +1056,7 @@ void main() {
             <li>Validasi dilakukan untuk memastikan nama hewan tidak kosong dan jenis hewan yang dimasukkan valid.</li>
             <li>Program kemudian menampilkan suara masing-masing hewan dan membuktikan bahwa cache bekerja dengan membandingkan dua objek yang sama.</li>
         </ul>
+        <h3>Kode Dart:</h3>
         <div class="code-box">
             <pre><code>
 // ==========================================
@@ -1039,57 +1067,39 @@ void main() {
 
 abstract class Animal {
   final String name;
-
   Animal(this.name);
-
   void sound();
+  static final Map<String, Animal> _cache = {};
 
-  static final Map&lt;String, Animal&gt; _cache = {};
-
-  factory Animal.create(
-    String type,
-    String name,
-  ) {
+  factory Animal.create(String type, String name) {
     if (name.isEmpty) {
-      throw ArgumentError(
-          'Nama hewan tidak boleh kosong');
+      throw ArgumentError('Nama hewan tidak boleh kosong');
     }
-
     String key = '$type-$name';
-
     if (_cache.containsKey(key)) {
       return _cache[key]!;
     }
-
     Animal animal;
-
     switch (type.toLowerCase()) {
       case 'cat':
         animal = Cat(name);
         break;
-
       case 'dog':
         animal = Dog(name);
         break;
-
       case 'bird':
         animal = Bird(name);
         break;
-
       default:
-        throw ArgumentError(
-            'Jenis hewan tidak dikenal');
+        throw ArgumentError('Jenis hewan tidak dikenal');
     }
-
     _cache[key] = animal;
-
     return animal;
   }
 }
 
 class Cat extends Animal {
   Cat(String name) : super(name);
-
   @override
   void sound() {
     print('$name : Meow');
@@ -1098,7 +1108,6 @@ class Cat extends Animal {
 
 class Dog extends Animal {
   Dog(String name) : super(name);
-
   @override
   void sound() {
     print('$name : Woof');
@@ -1107,7 +1116,6 @@ class Dog extends Animal {
 
 class Bird extends Animal {
   Bird(String name) : super(name);
-
   @override
   void sound() {
     print('$name : Tweet');
@@ -1115,57 +1123,52 @@ class Bird extends Animal {
 }
 
 void main() {
-  var cat1 = Animal.create(
-    'cat',
-    'Milo',
-  );
-
-  var dog1 = Animal.create(
-    'dog',
-    'Buddy',
-  );
-
-  var bird1 = Animal.create(
-    'bird',
-    'Rio',
-  );
-
-  var cat2 = Animal.create(
-    'cat',
-    'Milo',
-  );
+  var cat1 = Animal.create('cat', 'Milo');
+  var dog1 = Animal.create('dog', 'Buddy');
+  var bird1 = Animal.create('bird', 'Rio');
+  var cat2 = Animal.create('cat', 'Milo');
 
   cat1.sound();
   dog1.sound();
   bird1.sound();
-
   print('Cache bekerja: ${cat1 == cat2}');
 }
             </code></pre>
         </div>
+        <button class="button" onclick="runDart('dart12','https://dartpad.dev/embed-inline.html?id=7a9c3f8d7b2b4c7e5f1a6d9c2b3e5f6&split=60&run=true')">🚀 Tampilkan DartPad 12 🚀</button>
+        <iframe id="dart12" style="display:none; width:100%; height:300px;"></iframe>
     </div>
 
-    <!-- 13 -->
+    <!-- KESIMPULAN DAN PENUTUP -->
     <div class="section">
         <h2>13. Kesimpulan</h2>
-        <p>Dari seluruh pembahasan mengenai Factory Constructor pada bahasa Dart, dapat disimpulkan bahwa:</p>
-        <ul>
-            <li>Factory constructor digunakan untuk mengontrol proses pembuatan objek sehingga lebih fleksibel dibandingkan constructor biasa.</li>
-            <li>Factory constructor dapat mengembalikan instance dari class yang sama maupun subclass sesuai kebutuhan program.</li>
-            <li>Factory constructor memungkinkan penerapan pola Factory Pattern untuk menyederhanakan proses pembuatan objek.</li>
-            <li>Factory constructor dapat digunakan untuk melakukan validasi data sebelum objek dibuat sehingga meningkatkan konsistensi program.</li>
-            <li>Factory constructor dapat memanfaatkan cache untuk menghemat memori dengan menggunakan kembali objek yang sudah ada.</li>
-            <li>Factory constructor dapat dikombinasikan dengan Generic, Named Constructor, dan berbagai konsep Object-Oriented Programming (OOP).</li>
-            <li>Seluruh konsep factory constructor membantu menghasilkan kode yang lebih efisien, terstruktur, mudah dipelihara, dan mudah dikembangkan.</li>
-        </ul>
+        <div class="code-box">
+            <ul>
+                <li>Factory constructor digunakan untuk mengontrol proses pembuatan objek sehingga lebih fleksibel dibandingkan constructor biasa.</li>
+                <li>Factory constructor dapat mengembalikan instance dari class yang sama maupun subclass sesuai kebutuhan program.</li>
+                <li>Factory constructor memungkinkan penerapan pola Factory Pattern untuk menyederhanakan proses pembuatan objek.</li>
+                <li>Factory constructor dapat digunakan untuk melakukan validasi data sebelum objek dibuat sehingga meningkatkan konsistensi program.</li>
+                <li>Factory constructor dapat memanfaatkan cache untuk menghemat memori dengan menggunakan kembali objek yang sudah ada.</li>
+                <li>Factory constructor dapat dikombinasikan dengan Generic, Named Constructor, dan berbagai konsep Object-Oriented Programming (OOP).</li>
+                <li>Seluruh konsep factory constructor membantu menghasilkan kode yang lebih efisien, terstruktur, mudah dipelihara, dan mudah dikembangkan.</li>
+            </ul>
+        </div>
     </div>
 
-    <!-- 14 -->
     <div class="section">
         <h2>14. Penutup</h2>
-        <p>Demikian pembahasan mengenai Factory Constructor dalam bahasa Dart. Materi ini diharapkan dapat membantu dalam memahami cara pembuatan objek yang lebih fleksibel dan efisien sesuai kebutuhan aplikasi. Dengan memanfaatkan factory constructor, proses pengelolaan objek dapat menjadi lebih terstruktur, mudah dikembangkan, serta mendukung penerapan konsep Object-Oriented Programming (OOP) dengan lebih baik.</p>
-        <p>Penulis menyadari bahwa masih terdapat kekurangan dalam penyusunan tugas ini, sehingga kritik dan saran yang membangun sangat diharapkan demi perbaikan di masa mendatang. Semoga tugas ini bermanfaat dan dapat menjadi referensi dalam proses pembelajaran pemrograman Dart, khususnya mengenai Factory Constructor dan penerapannya dalam pengembangan perangkat lunak.</p>
+        <div class="code-box">
+            <p>Demikian pembahasan mengenai Factory Constructor dalam bahasa Dart. Materi ini diharapkan dapat membantu dalam memahami cara pembuatan objek yang lebih fleksibel dan efisien sesuai kebutuhan aplikasi.</p>
+            <p>Dengan memanfaatkan factory constructor, proses pengelolaan objek dapat menjadi lebih terstruktur, mudah dikembangkan, serta mendukung penerapan konsep Object-Oriented Programming (OOP) dengan lebih baik.</p>
+            <p>Penulis menyadari bahwa masih terdapat kekurangan dalam penyusunan tugas ini, sehingga kritik dan saran yang membangun sangat diharapkan demi perbaikan di masa mendatang.</p>
+            <p>Semoga tugas ini bermanfaat dan dapat menjadi referensi dalam proses pembelajaran pemrograman Dart, khususnya mengenai Factory Constructor dan penerapannya dalam pengembangan perangkat lunak.</p>
+        </div>
     </div>
 </div>
+
+<footer>
+    © 2026 Muhammad Bagas putra andeza - Universitas Bina Darma
+</footer>
+
 </body>
 </html>
